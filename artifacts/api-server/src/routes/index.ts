@@ -1,0 +1,16 @@
+import { Router, type IRouter } from "express";
+import healthRouter from "./health";
+import usersRouter from "./users";
+import postsRouter from "./posts";
+import commentsRouter from "./comments";
+import notificationsRouter from "./notifications";
+
+const router: IRouter = Router();
+
+router.use(healthRouter);
+router.use(usersRouter);
+router.use(postsRouter);
+router.use(commentsRouter);
+router.use(notificationsRouter);
+
+export default router;
