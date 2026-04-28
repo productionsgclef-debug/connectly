@@ -1,0 +1,78 @@
+# UNIFIED 2026 APP SUBMISSION SETUP (Big Bang Launch)
+# Use this file to copy-paste configurations across your 5 apps.
+
+=====================================================================
+1. ANDROID: build.gradle (Module: app)
+=====================================================================
+# Add this inside the 'android' block to ensure 64-bit compliance 
+# and Aptoide compatibility.
+
+android {
+    defaultConfig {
+        // Essential for Google Play & Aptoide 64-bit requirements
+        ndk {
+            abiFilters 'armeabi-v7a', 'arm64-v8a', 'x86', 'x86_64'
+        }
+    }
+
+    # Enable App Bundles for Google Play delivery
+    bundle {
+        abi { enableSplit = true }
+        density { enableSplit = true }
+        language { enableSplit = true }
+    }
+}
+
+=====================================================================
+2. IOS: Xcode Project Settings
+=====================================================================
+# Settings for Xcode 26 / iOS 26 SDK
+
+- Architectures: Standard Architectures (arm64)
+- Build Active Architecture Only: Set to NO for Release
+- iOS Deployment Target: 15.0 or higher (Recommended for 2026)
+- Privacy Manifest: Ensure 'PrivacyInfo.xcprivacy' is in the project root.
+
+=====================================================================
+3. APTOIDE: Universal APK Conversion Script
+=====================================================================
+# Run this command using bundletool to generate the APK Aptoide needs.
+# Replace placeholders with your actual keystore details.
+
+java -jar bundletool.jar build-apks \
+--bundle=YOUR_APP.aab \
+--output=YOUR_APP.apks \
+--mode=universal \
+--ks=YOUR_KEYSTORE.jks \
+--ks-pass=pass:YOUR_PASSWORD \
+--ks-key-alias=YOUR_ALIAS \
+--key-pass=pass:YOUR_PASSWORD
+
+# After running:
+# 1. Rename YOUR_APP.apks to YOUR_APP.zip
+# 2. Extract the file.
+# 3. Upload 'universal.apk' to Aptoide.
+
+=====================================================================
+4. UNIVERSAL METADATA TEMPLATE (Copy/Paste for all 5 Apps)
+=====================================================================
+APP NAME (30 chars): [Your App Name]
+SUBTITLE (30 chars): [Brief Value Proposition]
+SHORT DESC (80 chars): [One sentence elevator pitch]
+
+FULL DESCRIPTION:
+[First 2 lines: The Problem You Solve]
+[Bullet 1: Key Feature]
+[Bullet 2: Key Feature]
+[Bullet 3: Key Feature]
+[Closing: Call to Action]
+
+PRIVACY POLICY URL: https://yourdomain.com/privacy-policy
+SUPPORT URL: https://yourdomain.com/support
+
+=====================================================================
+5. 2026 LEGAL CHECKLIST
+=====================================================================
+[ ] Account Deletion: In-app button + data wipe capability.
+[ ] Data Safety: Disclosure for all 3rd party SDKs (Firebase, etc).
+[ ] AI Disclosure: If using LLMs, must be noted in 'Reviewer Notes'.
