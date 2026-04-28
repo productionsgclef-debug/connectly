@@ -1,0 +1,1 @@
+unzip -l your_app.aab | grep lib/
