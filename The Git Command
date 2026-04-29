@@ -1,0 +1,3 @@
+git add build_app.sh
+git commit -m "feat: add master build script with auto-setup and verification"
+git push origin main
