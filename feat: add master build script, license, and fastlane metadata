@@ -1,0 +1,2 @@
+git commit -m "Add master build script with setup and verification"
+git push origin main
