@@ -1,0 +1,6 @@
+# Root directory
+npm install
+
+# If you have sub-packages (common in React Native/Mobile projects):
+cd android && npm install && cd ..
+cd ios && npm install && cd ..
