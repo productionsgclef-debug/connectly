@@ -1,0 +1,27 @@
+stages:
+  - prepare
+  - build
+
+# This runs before every job in the pipeline
+before_script:
+  - chmod +x master_setup.sh
+  - ./master_setup.sh
+
+# Initial setup and verification stage
+verify_setup:
+  stage: prepare
+  image: node:latest
+  script:
+    - echo "Verification complete. Assets and locks are ready."
+
+# Main Android build stage
+build_android:
+  stage: build
+  image: fabernovel/android:api-33-v1.7.0  # Use a specialized Android image
+  script:
+    - bundle install
+    - bundle exec fastlane android build
+  artifacts:
+    paths:
+      - app/build/outputs/apk/debug/*.apk
+      - fastlane/screenshots/
