@@ -1,0 +1,12 @@
+# 1. Double-check the folder name (must be plural 'workflows')
+mkdir -p .github/workflows
+
+# 2. Make a tiny change to the workflow file to force a refresh
+echo "# Bot Version 1.1" >> .github/workflows/autofix.yml
+
+# 3. Add, Commit, and Push
+git add .github/workflows/autofix.yml
+git commit -m "chore: force-activate auto-fix bot"
+BRANCH=$(git rev-parse --abbrev-ref HEAD)
+git push origin "$BRANCH"
+git push github "$BRANCH"
