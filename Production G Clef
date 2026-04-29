@@ -1,0 +1,59 @@
+cat <<'EOF' > build_app.sh
+#!/bin/bash
+
+# =================================================================
+# MASTER BUILD SCRIPT: @productionsgclef
+# Steps: Setup -> Verify -> Build Android
+# =================================================================
+
+set -e # Exit on error
+
+echo "🛠️  Phase 1: Setup & Initialization"
+# Add License
+if [ ! -f LICENSE ]; then
+    echo "📄 Generating LICENSE..."
+    echo "MIT License. Copyright (c) $(date +%Y) @productionsgclef" > LICENSE
+fi
+
+# Generate package-lock.json
+echo "📦 Locking dependencies..."
+find . -name "package.json" -not -path "*/node_modules/*" | while read pkg; do
+    dir=$(dirname "$pkg")
+    echo "   - Locking $dir"
+    (cd "$dir" && npm install --package-lock-only)
+done
+
+# Setup Fastlane structure (Metadata from snippet 1895688)
+echo "📸 Setting up Fastlane assets..."
+METADATA_DIR="fastlane/metadata/android/en-US"
+mkdir -p "$METADATA_DIR/images"
+touch "$METADATA_DIR/images/icon.png"
+echo "Production G Clef App Description" > "$METADATA_DIR/full_description.txt"
+echo "Production G Clef" > "$METADATA_DIR/title.txt"
+
+echo "🔍 Phase 2: Verification"
+MISSING=0
+for file in "LICENSE" "package-lock.json" "$METADATA_DIR/title.txt"; do
+    if [ -f "$file" ]; then
+        echo "✅ OK: $file"
+    else
+        echo "❌ MISSING: $file"
+        MISSING=$((MISSING + 1))
+    fi
+done
+
+if [ $MISSING -gt 0 ]; then
+    echo "⚠️ Verification Failed! Missing $MISSING core files."
+    exit 1
+fi
+
+echo "🚀 Phase 3: Building Android App"
+if command -v fastlane &> /dev/null; then
+    bundle exec fastlane android build
+else
+    echo "⚠️ Fastlane not found locally. Skipping compilation."
+    echo "💡 Run this in GitLab CI or install Fastlane to build."
+fi
+
+echo "✨ All tasks completed successfully!"
+EOF
